@@ -1,6 +1,9 @@
 const { resolve } = require('dns');
 const taskService = require('../services/taskServices');
 const { rejects } = require('assert');
+const { json } = require('stream/consumers');
+
+
 
 
 //funcao auxiliar para ler body
@@ -13,6 +16,8 @@ const getRequestBody = (req) => {
         })
 
 
+
+
         req.on('end', () => {
             resolve(JSON.parse(body))
         })
@@ -20,16 +25,30 @@ const getRequestBody = (req) => {
 }
 
 
+
+
 //crira tarefa
 const createTask = async (req, res) => {
     const body = await getRequestBody(req);
 
 
+
+
     const task = taskService.addTAsk(body.title);
+
+
 
 
     res.statusCode = 201;
     res.end(JSON.stringify(task));
+}
+//listar tarefa especifica
+const listTaksSpecify =(req, res) => {
+    const task = taskService.getTaskSpecify();
+
+
+    res.statusCode = 200;
+    res.end(JSON.stringify(task))
 }
 
 
@@ -38,15 +57,21 @@ const listTask = (req, res) => {
     const task = taskService.getTask();
 
 
+
+
     res.statusCode = 200;
     res.end(JSON.stringify(task));
 };
+
+
 
 
 //atualizar tarefas
 const updateTask = async (req, res, id) => {
     const body = await getRequestBody(req);
     const task = taskService.updateTask(id , body.title);
+
+
 
 
     if(!task){
@@ -57,7 +82,13 @@ const updateTask = async (req, res, id) => {
     }
 
 
+
+
     res.end(JSON.stringify(task))
+
+
+
+
 
 
 
@@ -65,9 +96,27 @@ const updateTask = async (req, res, id) => {
 }
 
 
+// complete task
+const completedTask = async (req, res, id) => {
+    const task = taskService.completedTask(id);
+
+
+    if (!task) {
+        res.statusCode = 404;
+        return res.end(JSON.stringify(
+            { message: 'nao encontrada'}
+        ))
+       
+    }
+
+
+    res.end(JSON.stringify(task))
+}
 //deletar tarefa
 const deleteTask = (req, res, id) => {
     const success = taskService.deleteTask(id);
+
+
 
 
     if(!success){
@@ -78,13 +127,26 @@ const deleteTask = (req, res, id) => {
     }
 
 
+
+
     res.end(JSON.stringify({ message: 'Removida'}))
 }
+
+
+
+
+
+
 
 
 module.exports = {
     createTask,
     listTask,
     updateTask,
-    deleteTask
+    deleteTask,
+    completedTask,
+    listTaksSpecify
 }
+
+
+

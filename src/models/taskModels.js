@@ -1,4 +1,4 @@
-const createTask = (id, title) => {
+const createTask = (id, title, completed) => {
     return{
         id,
         title,
@@ -6,3 +6,4 @@ const createTask = (id, title) => {
     };
 };
 module.exports = { createTask };
+

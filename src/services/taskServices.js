@@ -1,44 +1,76 @@
 const { createTask } = require('../models/taskModels');
 
 
+
+
 let tasks = []
 let idCounter = 1;
 
 
+
+
 //criar
 const addTAsk = (title) => {
-    const task = createTask(idCounter++, title);
-    task.push(task);
-    return task;
+    const newtask = createTask(idCounter++, title);
+    tasks.push(newtask);
+    return newtask;
 };
 
 
+
+
 //listar
-const getTask = () => task;
+const getTask = () => tasks;
+
+
+const getTaskSpecify = (id) => tasks[id];
+
+
 
 
 //atualizar
 const updateTask = (id, title) =>{
-    const task = task.findIndex(t => t.id == id);
-    if (!task) return null;
+    const index = tasks.findIndex(t => t.id == id);
+    if (index === -1) return null;
 
 
-    task.title = title;
-    return task;
+
+
+    tasks[index].title = title;
+    return tasks[index];
 }
 //deletar
 const deleteTask =(id) => {
-    const index = task.findIndex(t => t.id ==id);
+    const index = tasks.findIndex(t => t.id ==id);
     if(index === -1) return false
    
-    task.splice(index, 1)
+    tasks.splice(index, 1)
     return true
 }
+
+
+const completedTask = (id) => {
+    const index = tasks.findIndex(t => t.id == id);
+    if(index === -1) return null;
+
+
+    tasks[index].completed = true;
+    return tasks[index];
+
+
+}
+
+
 
 
 module.exports = {
     addTAsk,
     getTask,
     updateTask,
-    deleteTask
+    deleteTask,
+    completedTask,
+    getTaskSpecify
 }
+
+
+
